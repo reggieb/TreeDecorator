@@ -6,31 +6,40 @@ module TreeDecorator
       @tree = tree
     end
     
-    def containment(&containment)
-      @containment = containment
+    def outer(&containment)
+      @outer = containment
     end
     
-    def element(&elementizer)
-      @elementizer = elementizer
+    def inner(&elementizer)
+      @inner = elementizer
+    end
+    
+    def element(&element)
+      @element = element
+    end
+    
+    def join_with(text)
+      @join_with = text
     end
     
     def tree
       output = packager(@tree)
-      @containment ? @containment.call(output) : output 
+      @outer ? @outer.call(output) : output 
     end
     
     private
     def packager(hash)
       output = []
       hash.each do |parent, child|
+        parent = @element.call(parent) if @element
         if child and !child.empty?
           child = packager(child)
-          child = @containment.call(child) if @containment
+          child = @outer.call(child) if @outer
           parent = parent.to_s + child
         end
-        output << (@elementizer ? @elementizer.call(parent) : parent)
+        output << (@inner ? @inner.call(parent) : parent)
       end
-      return output.join
+      return output.join(@join_with)
     end
   end
 end
