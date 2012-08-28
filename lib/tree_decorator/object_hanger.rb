@@ -30,6 +30,9 @@ module TreeDecorator
 
       if children and !children.empty?
         children.each do |child|
+          unless child.respond_to? content_method
+            raise "Child does not have :#{content_method} method: #{child.inspect}"
+          end
           content[child.send(content_method)] = populate_with_children(child)
         end
       end

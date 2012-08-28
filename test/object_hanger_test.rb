@@ -41,6 +41,29 @@ module TreeDecorator
       test_hanging_object
     end
     
+    def test_with_multiple_roots
+      @three.children = [@one]
+      @hanger = ObjectHanger.new(
+        [@three, @two],
+        :children_method => :children,
+        :content_method => :text
+      )
+      @hanger.outer {|content| "<ul>#{content}</ul>"}
+      @hanger.inner {|content| "<li>#{content}</li>"}
+      expected = '<ul><li>three<ul><li>one</li></ul></li><li>two</li></ul>'
+      assert_equal(expected, @hanger.tree)
+    end
+    
+    def test_with_items_that_do_not_respond_to_content_method
+      assert_raise RuntimeError do
+        @hanger = ObjectHanger.new(
+          [@three, @two],
+          :children_method => :children,
+          :content_method => :something
+      )
+      end
+    end
+    
     private
     def unordered_list
       "<ul><li>three<ul><li>one</li><li>two</li></ul></li></ul>"
