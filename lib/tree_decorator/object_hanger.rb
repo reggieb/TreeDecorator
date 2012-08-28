@@ -20,13 +20,13 @@ module TreeDecorator
     
     private
     def get_hash_from_objects
-      objects = @root.kind_of?(Array) ? @root : [@root]
+      objects = @root.respond_to?(:each) ? @root : [@root]
       populate_with_children(objects)
     end
     
     def populate_with_children(object)
       content = Hash.new          
-      children = object.respond_to?(:each) ? object : object.send(children_method)
+      children = object.respond_to?(:each) ? object.to_a : object.send(children_method)
 
       if children and !children.empty?
         children.each do |child|

@@ -2,7 +2,7 @@ require 'rake/gempackagetask'
 
 Gem::Specification.new do |s|
   s.name = 'tree_decorator'
-  s.version = '0.1.3'
+  s.version = '0.1.5'
   s.authors = ['Rob Nichols']
   s.date = %q{2012-08-28}
   s.description = "A tool that walks through a hash or nested object and applies code to containers and elements based on user defined rules."
