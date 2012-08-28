@@ -25,6 +25,6 @@ For an example of how TreeDecorator can be used in Rails:
     hanger.element {|thing| link_to(thing.name, thing_path(thing))}
 
     hanger.tree  #----> outputs a nested HTML unordered list with each thing's name 
-                 #      in a span of class 'thing'.
+                 #      linking to it's default path.
 
 See lib/example and tests for examples of usage
