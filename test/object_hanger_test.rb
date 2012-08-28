@@ -33,8 +33,6 @@ module TreeDecorator
       assert_equal(expected, @hanger.hash)
     end
 
-
-
     class AnObject
       attr_accessor :text, :children   
       def children
