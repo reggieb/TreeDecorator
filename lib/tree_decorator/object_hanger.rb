@@ -26,7 +26,7 @@ module TreeDecorator
     
     def populate_with_children(object)
       content = Hash.new          
-      children = object.kind_of?(Array) ? object : object.send(children_method)
+      children = object.respond_to?(:each) ? object : object.send(children_method)
 
       if children and !children.empty?
         children.each do |child|
