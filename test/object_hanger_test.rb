@@ -24,13 +24,26 @@ module TreeDecorator
     def test_hanging_object
       @hanger.outer {|content| "<ul>#{content}</ul>"}
       @hanger.inner {|content| "<li>#{content}</li>"}
-      expected = "<ul><li>three<ul><li>one</li><li>two</li></ul></li></ul>"
-      assert_equal(expected, @hanger.tree)
+      assert_equal(unordered_list, @hanger.tree)
     end
 
     def test_hash
       expected = {'three' => {'one' => {}, 'two' => {}}}
       assert_equal(expected, @hanger.hash)
+    end
+    
+    def test_with_array
+      @hanger = ObjectHanger.new(
+        [@three],
+        :children_method => :children,
+        :content_method => :text
+      )
+      test_hanging_object
+    end
+    
+    private
+    def unordered_list
+      "<ul><li>three<ul><li>one</li><li>two</li></ul></li></ul>"
     end
 
     class AnObject

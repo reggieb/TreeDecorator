@@ -16,7 +16,7 @@ For example:
     end
 
     hanger = TreeDecorator::ObjectHanger.new(
-              Thing.roots.first,
+              Thing.roots,
               :children_method => :children,
               :content_method => :name
             )
@@ -25,7 +25,7 @@ For example:
     hanger.inner   {|content| "<li>#{content}</li>"}
     hanger.element {|content| "<span class=\"thing\">#{content}</span>"}
 
-    hanger.tree  #----> outputs a nested HTML unordered list with each things name 
+    hanger.tree  #----> outputs a nested HTML unordered list with each thing's name 
                  #      in a span of class 'thing'.
 
 See lib/example and tests for examples of usage

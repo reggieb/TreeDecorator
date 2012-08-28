@@ -20,15 +20,14 @@ module TreeDecorator
     
     private
     def get_hash_from_objects
-      content = Hash.new
-      content[@root.send(content_method)] = populate_with_children(@root)
-      return content
+      objects = @root.kind_of?(Array) ? @root : [@root]
+      populate_with_children(objects)
     end
     
     def populate_with_children(object)
-      content = Hash.new
-      children = object.send(children_method)
-      
+      content = Hash.new          
+      children = object.kind_of?(Array) ? object : object.send(children_method)
+
       if children and !children.empty?
         children.each do |child|
           content[child.send(content_method)] = populate_with_children(child)
