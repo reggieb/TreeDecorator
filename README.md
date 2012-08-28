@@ -17,13 +17,12 @@ For example:
 
     hanger = TreeDecorator::ObjectHanger.new(
               Thing.roots,
-              :children_method => :children,
-              :content_method => :name
+              :children_method => :children
             )
 
     hanger.outer   {|content| content_tag('ul', content.html_safe)}
     hanger.inner   {|content| content_tag('li', content.html_safe)}
-    hanger.element {|content| content_tag('span', content.html_safe, :class => 'thing')}
+    hanger.element {|content| content_tag('span', content.name, :class => 'thing')}
 
     hanger.tree  #----> outputs a nested HTML unordered list with each thing's name 
                  #      in a span of class 'thing'.

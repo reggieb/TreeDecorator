@@ -16,27 +16,26 @@ module TreeDecorator
       @three.children = [@one, @two]
       @hanger = ObjectHanger.new(
         @three,
-        :children_method => :children,
-        :content_method => :text
+        :children_method => :children
       )
     end
 
     def test_hanging_object
       @hanger.outer {|content| "<ul>#{content}</ul>"}
       @hanger.inner {|content| "<li>#{content}</li>"}
+      @hanger.element {|content| content.text}
       assert_equal(unordered_list, @hanger.tree)
     end
 
     def test_hash
-      expected = {'three' => {'one' => {}, 'two' => {}}}
+      expected = {@three => {@one => {}, @two => {}}}
       assert_equal(expected, @hanger.hash)
     end
     
     def test_with_array
       @hanger = ObjectHanger.new(
         [@three],
-        :children_method => :children,
-        :content_method => :text
+        :children_method => :children
       )
       test_hanging_object
     end
@@ -45,23 +44,13 @@ module TreeDecorator
       @three.children = [@one]
       @hanger = ObjectHanger.new(
         [@three, @two],
-        :children_method => :children,
-        :content_method => :text
+        :children_method => :children
       )
       @hanger.outer {|content| "<ul>#{content}</ul>"}
       @hanger.inner {|content| "<li>#{content}</li>"}
+      @hanger.element {|content| content.text}
       expected = '<ul><li>three<ul><li>one</li></ul></li><li>two</li></ul>'
       assert_equal(expected, @hanger.tree)
-    end
-    
-    def test_with_items_that_do_not_respond_to_content_method
-      assert_raise RuntimeError do
-        @hanger = ObjectHanger.new(
-          [@three, @two],
-          :children_method => :children,
-          :content_method => :something
-      )
-      end
     end
     
     private

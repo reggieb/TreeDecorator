@@ -10,7 +10,6 @@ module TreeDecorator
     def initialize(root, args = {})
       @root = root
       @children_method = args[:children_method]
-      @content_method = args[:content_method]
       @tree = hash
     end
     
@@ -30,10 +29,7 @@ module TreeDecorator
 
       if children and !children.empty?
         children.each do |child|
-          unless child.respond_to? content_method
-            raise "#{child.class.to_s} does not have :#{content_method} method: #{child.inspect}"
-          end
-          content[child.send(content_method)] = populate_with_children(child)
+          content[child] = populate_with_children(child)
         end
       end
       
