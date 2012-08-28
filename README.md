@@ -16,7 +16,7 @@ For example:
     end
 
     hanger = TreeDecorator::ObjectHanger.new(
-              Thing.roots.to_a,
+              Thing.roots,
               :children_method => :children,
               :content_method => :name
             )
