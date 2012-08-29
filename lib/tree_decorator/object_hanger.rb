@@ -7,9 +7,11 @@ module TreeDecorator
   class ObjectHanger < Hanger
     attr_reader :children_method, :content_method
     
+    DEFAULT_CHILDREN_METHOD = :children
+    
     def initialize(root, args = {})
       @root = root
-      @children_method = args[:children_method]
+      @children_method = args[:children_method] || DEFAULT_CHILDREN_METHOD
       @tree = hash
     end
     

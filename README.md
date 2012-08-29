@@ -15,10 +15,7 @@ For an example of how TreeDecorator can be used in Rails:
       end
     end
 
-    hanger = TreeDecorator::ObjectHanger.new(
-              Thing.roots,
-              :children_method => :children
-            )
+    hanger = TreeDecorator::ObjectHanger.new(Thing.roots)
 
     hanger.outer   {|content| content_tag('ul', content.html_safe)}
     hanger.inner   {|content| content_tag('li', content.html_safe)}

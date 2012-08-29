@@ -14,10 +14,7 @@ module TreeDecorator
       @three = AnObject.new
       @three.text = 'three'
       @three.children = [@one, @two]
-      @hanger = ObjectHanger.new(
-        @three,
-        :children_method => :children
-      )
+      @hanger = ObjectHanger.new(@three)
     end
 
     def test_hanging_object
@@ -33,24 +30,25 @@ module TreeDecorator
     end
     
     def test_with_array
-      @hanger = ObjectHanger.new(
-        [@three],
-        :children_method => :children
-      )
+      @hanger = ObjectHanger.new([@three])
       test_hanging_object
     end
     
     def test_with_multiple_roots
       @three.children = [@one]
-      @hanger = ObjectHanger.new(
-        [@three, @two],
-        :children_method => :children
-      )
+      @hanger = ObjectHanger.new([@three, @two])
       @hanger.outer {|content| "<ul>#{content}</ul>"}
       @hanger.inner {|content| "<li>#{content}</li>"}
       @hanger.element {|content| content.text}
       expected = '<ul><li>three<ul><li>one</li></ul></li><li>two</li></ul>'
       assert_equal(expected, @hanger.tree)
+    end
+    
+    def test_with_alternative_children_method
+      @one.kids = [@two]
+      expected = {@one => {@two => {}}}
+      hanger = ObjectHanger.new(@one, :children_method => :kids)
+      assert_equal(expected, hanger.hash)
     end
     
     private
@@ -59,9 +57,13 @@ module TreeDecorator
     end
 
     class AnObject
-      attr_accessor :text, :children   
+      attr_accessor :text, :children, :kids   
       def children
         @children || Array.new
+      end
+      
+      def kids
+        @kids || Array.new
       end
     end
   end
