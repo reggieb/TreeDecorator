@@ -29,9 +29,16 @@ module TreeDecorator
     
     private
     def packager(hash)
+      hash = hash.to_hash if hash.respond_to? :to_hash
+      unless hash.kind_of? Hash
+        hash = @element.call(hash) if @element
+        return @inner ? @inner.call(hash) : hash
+      end
       output = []
       hash.each do |parent, child|
         parent = @element.call(parent) if @element
+        child = child.to_hash if child.respond_to? :to_hash
+        child = child.to_s unless child.kind_of? Hash
         if child and !child.empty?
           child = packager(child)
           child = @outer.call(child) if @outer

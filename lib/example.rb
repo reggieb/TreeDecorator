@@ -3,12 +3,12 @@ require_relative('tree_decorator')
 tree = {
         1 => {
           2 => {
-            4 => {},
-            5 => {},
+            3 => 4,
+            5 => 6,
           },
-          6 => {}         
+          7 => 8
         },
-        7 => {}
+        9 => 10
       }
 
 hanger = TreeDecorator::Hanger.new(tree)
@@ -19,10 +19,9 @@ hanger.inner {|content| "<li>#{content}<li>"}
 puts unordered_list = hanger.tree
 
 hanger = TreeDecorator::Hanger.new(tree)
+hanger.inner {|content| "<inner>#{content}</inner>"}
+hanger.outer {|content| "<outer>#{content}</outer>"}
 hanger.element {|content| "element:#{content}"}
-hanger.outer {|content| "<container>#{content}</container>"}
-hanger.join_with(',')
-
 puts containers = hanger.tree
 
 

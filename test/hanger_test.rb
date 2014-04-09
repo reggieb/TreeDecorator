@@ -46,13 +46,29 @@ module TreeDecorator
       
       assert_equal("124567", hanger.tree)
     end
-    
+   
     def test_join_with
       hanger = Hanger.new(tree)
       hanger.outer {|content| "[#{content.to_s}]"}
       hanger.join_with ','
       
       assert_equal("[1[2[4,5],6],7]", hanger.tree)    
+    end
+
+    def test_hanger_with_populated_tree
+      hanger = Hanger.new(populated_tree)
+      hanger.inner {|content| "<#{content}>"}
+      hanger.element {|content| "[#{content}]"}
+
+      assert_equal("<[1]<[2]<[4]<[99]>><[5]>><[6]<[Foo]>>><[7]>", hanger.tree)
+    end
+
+    def test_hanger_with_something_that_can_be_converted_into_a_hash
+      hanger = Hanger.new :zero => AlmostHash.new
+      hanger.element {|content| "[#{content}]"}
+      hanger.inner {|content| "<#{content}>"}
+      
+      assert_equal("<[zero]<[one]<[this]>>>", hanger.tree)
     end
     
     private
@@ -81,9 +97,28 @@ module TreeDecorator
         7 => nil
       }
     end
+
+    def populated_tree
+      {
+        1 => {
+          2 => {
+            4 => 99,
+            5 => {},
+          },
+          6 => 'Foo'
+        },
+        7 => {}
+      }
+    end
     
     def unordered_list
       "<ul><li>2<ul><li>4<ul><li>8</li><li>10</li></ul></li><li>12</li></ul></li><li>14</li></ul>"
+    end
+
+    class AlmostHash
+      def to_hash
+        {one: 'this'}
+      end
     end
     
   end
